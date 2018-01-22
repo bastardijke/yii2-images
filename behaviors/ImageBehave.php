@@ -50,9 +50,8 @@ class ImageBehave extends Behavior
         }
 
         $pictureFileName =
-            substr(md5(microtime(true) . $absolutePath), 4, 6)
-            . '.' .
-            pathinfo($absolutePath, PATHINFO_EXTENSION);
+            substr(md5(microtime(true) . $absolutePath), 4, 6) .
+            image_type_to_extension(getimagesize($absolutePath)[2]);
         $pictureSubDir = $this->getModule()->getModelSubDir($this->owner);
         $storePath = $this->getModule()->getStorePath($this->owner);
 
