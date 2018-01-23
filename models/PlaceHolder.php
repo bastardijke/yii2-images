@@ -20,38 +20,36 @@ use yii;
 class PlaceHolder extends Image
 {
 
-    private $modelName = '';
+    public $modelName = '';
     private $itemId = '';
     public $filePath = 'placeHolder.png';
     public $urlAlias = 'placeHolder';
 
 
-    /*  public function getUrl($size = false){
-          $url = $this->getModule()->placeHolderUrl;
-          if(!$url){
-              throw new \Exception('PlaceHolder image must have url setting!!!');
-          }
-          return $url;
-      }*/
-
-    public function __construct()
-    {
-        $this->filePath =basename(Yii::getAlias($this->getModule()->placeHolderPath)) ;
-    }
-
-    public function getPathToOrigin()
-    {
-
-        $url = Yii::getAlias($this->getModule()->placeHolderPath);
-        if (!$url) {
-            throw new \Exception('PlaceHolder image must have path setting!!!');
+    public function __construct( $modelName = null ){
+        if ( !empty($modelName) && array_key_exists( $modelName , $this->getModule()->customPlaceHolders ) ) {
+          $this->modelName = $modelName;
+          $this->urlAlias .= '-' . $modelName;
+          $this->filePath = Yii::getAlias($this->getModule()->customPlaceHolders[$modelName]);
+        } elseif ( $this->getModule()->placeHolderPath ) {
+          $this->filePath = Yii::getAlias($this->getModule()->placeHolderPath);
+        } else {
+          throw new \Exception('PlaceHolder image must have path setting!!!');
         }
-        return $url;
+
+        if ( !file_exists($this->filePath) ) {
+          throw new \Exception( 'Specified placeholder file "' . $this->filePath . '" not exists!' );
+        }
     }
 
-    protected  function getSubDur(){
+    public function getPathToOrigin(){
+        return $this->filePath;
+    }
+
+    protected function getSubDur(){
         return 'placeHolder';
     }
+
     public function setMain($isMain = true){
         throw new yii\base\Exception('You must not set placeHolder as main image!!!');
     }
