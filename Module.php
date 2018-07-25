@@ -19,6 +19,8 @@ class Module extends \yii\base\Module
 
     public $placeHolderPath;
 
+    public $customPlaceHolders = [];
+
     public $waterMark = false;
 
     public $className;
@@ -51,15 +53,9 @@ class Module extends \yii\base\Module
                 'itemId' => $itemId,
                 'urlAlias' => $alias
             ])
-            /*     ->where('modelName = :modelName AND itemId = :itemId AND urlAlias = :alias',
-                     [
-                         ':modelName' => $modelName,
-                         ':itemId' => $itemId,
-                         ':alias' => $alias
-                     ])*/
             ->one();
         if(!$image){
-            return $this->getPlaceHolder();
+            return $this->getPlaceHolder($modelName);
         }
 
         return $image;
@@ -74,17 +70,13 @@ class Module extends \yii\base\Module
     public function getCachePath()
     {
         return Yii::getAlias($this->imagesCachePath);
-
     }
 
     public function getModelSubDir($model)
     {
-
         $modelName = $this->getShortClass($model);
-        $modelDir = \yii\helpers\Inflector::pluralize($modelName).'/'. $modelName . $model->getPrimaryKey();
+        $modelDir = \yii\helpers\Inflector::pluralize($modelName) . DIRECTORY_SEPARATOR . $modelName . $model->getPrimaryKey();
         return $modelDir;
-
-
     }
 
 
@@ -180,12 +172,7 @@ class Module extends \yii\base\Module
         // custom initialization code goes here
     }
 
-    public function getPlaceHolder(){
-
-        if($this->placeHolderPath){
-            return new PlaceHolder();
-        }else{
-            return null;
-        }
+    public function getPlaceHolder( $modelName = null ){
+        return new PlaceHolder( $modelName );
     }
 }

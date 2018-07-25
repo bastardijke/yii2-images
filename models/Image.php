@@ -26,27 +26,20 @@ class Image extends \yii\db\ActiveRecord
 {
     use ModuleTrait;
 
-
-    private $helper = false;
-
-
-
     public function clearCache(){
         $subDir = $this->getSubDur();
 
         $dirToRemove = $this->getModule()->getCachePath().DIRECTORY_SEPARATOR.$subDir;
 
-        if(preg_match('/'.preg_quote($this->modelName, '/').'/', $dirToRemove)){
+        if (preg_match('/'.preg_quote($this->modelName, '/').'/', $dirToRemove)){
             BaseFileHelper::removeDirectory($dirToRemove);
-
         }
 
         return true;
     }
 
     public function getExtension(){
-        $ext = pathinfo($this->getPathToOrigin(), PATHINFO_EXTENSION);
-        return $ext;
+        return pathinfo($this->getPathToOrigin(), PATHINFO_EXTENSION);
     }
 
     public function getUrl($size = false){
@@ -85,12 +78,7 @@ class Image extends \yii\db\ActiveRecord
     }
 
     public function getPathToOrigin(){
-
-        $base = $this->getModule()->getStorePath();
-
-        $filePath = $base.DIRECTORY_SEPARATOR.$this->filePath;
-
-        return $filePath;
+        return $this->getModule()->getStorePath() . DIRECTORY_SEPARATOR . $this->filePath;
     }
 
 
@@ -115,8 +103,6 @@ class Image extends \yii\db\ActiveRecord
         if(!$size){
             throw new \Exception('Bad size..');
         }
-
-
 
         $sizes = $this->getSizes();
 
@@ -256,7 +242,13 @@ class Image extends \yii\db\ActiveRecord
 
     }
 
-
+    /**
+     *
+     * Returns MIME type of image used for Content-Type header.
+     *
+     * @param $size
+     * @return string
+     */
     public function getMimeType($size = false) {
         return image_type_to_mime_type ( exif_imagetype( $this->getPath($size) ) );
     }
@@ -265,7 +257,6 @@ class Image extends \yii\db\ActiveRecord
     protected function getSubDur(){
         return \yii\helpers\Inflector::pluralize($this->modelName).'/'.$this->modelName.$this->itemId;
     }
-
 
 
     /**

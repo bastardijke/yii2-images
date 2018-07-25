@@ -135,12 +135,16 @@ Installation
                 'imagesCachePath' => 'images/cache', //path to resized copies
                 'graphicsLibrary' => 'GD', //but really its better to use 'Imagick' 
                 'placeHolderPath' => '@webroot/images/placeHolder.png', // if you want to get placeholder when image not exists, string will be processed by Yii::getAlias
+                'customPlaceHolders' => [ // Optional. You can specify custom placeholder for each model. 
+                    'User' => '@webroot/images/avatar-placeholder.png',
+                    'SomeModel' => '@webroot/images/some-image.jpg',
+                ],
                 'imageCompressionQuality' => 100, // Optional. Default value is 85.
             ],
         ],
     ```
 
-5. attach behaviour to your model (be sure that your model has "id" property)
+5. attach behavior to your model (be sure that your model has "id" property)
     ```php
         public function behaviors()
         {

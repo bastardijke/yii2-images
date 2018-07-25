@@ -184,7 +184,7 @@ class ImageBehave extends Behavior
 
         $imageRecords = $imageQuery->all();
         if(!$imageRecords && $this->getModule()->placeHolderPath){
-            return [$this->getModule()->getPlaceHolder()];
+            return [$this->getModule()->getPlaceHolder($this->getModule()->getShortClass($this->owner))];
         }
         return $imageRecords;
     }
@@ -205,9 +205,8 @@ class ImageBehave extends Behavior
         $imageQuery->where($finder);
         $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
 
-        $img = $imageQuery->one();
-        if(!$img){
-            return $this->getModule()->getPlaceHolder();
+        if(!$img = $imageQuery->one()){
+            return $this->getModule()->getPlaceHolder($this->getModule()->getShortClass($this->owner));
         }
 
         return $img;
@@ -229,9 +228,8 @@ class ImageBehave extends Behavior
         $imageQuery->where($finder);
         $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
 
-        $img = $imageQuery->one();
-        if(!$img){
-            return $this->getModule()->getPlaceHolder();
+        if(!$img = $imageQuery->one()){
+            return $this->getModule()->getPlaceHolder($this->getModule()->getShortClass($this->owner));
         }
 
         return $img;
