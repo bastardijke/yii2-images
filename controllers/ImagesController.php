@@ -48,12 +48,15 @@ class ImagesController extends Controller
         $image = $this->getModule()->getImage($item, $alias);
 
         if($image->getExtension() != $dotParts[1]){
-            throw new \yii\web\HttpException(404, 'Image not found (extenstion)');
+            throw new \yii\web\HttpException(404, 'Image not found (extension)');
         }
 
         if($image){
-            header('Content-Type: image/jpg');
-            echo $image->getContent($size);
+            $response = \Yii::$app->response;
+            $response->format = yii\web\Response::FORMAT_RAW;
+            $response->headers->add('Content-Type', $image->getMimeType($size));
+            $response->data = $image->getContent($size);
+            return $response;
         }else{
             throw new \yii\web\HttpException(404, 'There is no images');
         }
